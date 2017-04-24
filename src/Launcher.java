@@ -2,6 +2,7 @@
 import java.io.IOException;
 import javax.swing.text.BadLocationException;
 import presentacion.Modelo;
+import presentacion.Vista;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,8 +19,8 @@ public class Launcher {
     private Modelo visorCliente;
     
     public Launcher() throws BadLocationException, IOException{
-        visorCliente = new Modelo();
-        visorCliente.iniciar();        
+        Vista v = new  Vista();
+        v.setVisible(true);
     }
     
     public static void main(String[] args) throws BadLocationException, IOException {
