@@ -5,6 +5,9 @@
  */
 package presentacion;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author john
@@ -17,6 +20,8 @@ public class VistaTablero extends javax.swing.JFrame {
     public VistaTablero() {
         initComponents();
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,21 +32,26 @@ public class VistaTablero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        botonPlantar1 = new javax.swing.JButton();
         botonPlantar = new javax.swing.JButton();
+        botonPedir = new javax.swing.JButton();
         lienzo = new java.awt.Canvas();
+        mensaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        botonPlantar1.setText("PLANTARSE");
-        getContentPane().add(botonPlantar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, -1, -1));
+        botonPlantar.setText("PLANTARSE");
+        getContentPane().add(botonPlantar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, -1, -1));
 
-        botonPlantar.setText("PEDIR");
-        getContentPane().add(botonPlantar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 60, -1, -1));
+        botonPedir.setText("PEDIR");
+        getContentPane().add(botonPedir, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 60, -1, -1));
 
         lienzo.setBackground(new java.awt.Color(23, 133, 1));
         getContentPane().add(lienzo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 0, 590, 330));
+
+        mensaje.setFont(new java.awt.Font("Berlin Sans FB", 0, 12)); // NOI18N
+        mensaje.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 560, 90));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -81,9 +91,40 @@ public class VistaTablero extends javax.swing.JFrame {
         });
     }
 
+    public JButton getBotonPedir() {
+        return botonPedir;
+    }
+
+    public void setBotonPedir(JButton botonPedir) {
+        this.botonPedir = botonPedir;
+    }
+
+    public JButton getBotonPlantar() {
+        return botonPlantar;
+    }
+
+    public void setBotonPlantar(JButton botonPlantar) {
+        this.botonPlantar = botonPlantar;
+    }
+
+    public JLabel getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(JLabel mensaje) {
+        this.mensaje = mensaje;
+    }
+    
+    
+
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonPedir;
     private javax.swing.JButton botonPlantar;
-    private javax.swing.JButton botonPlantar1;
     private java.awt.Canvas lienzo;
+    private javax.swing.JLabel mensaje;
     // End of variables declaration//GEN-END:variables
 }
+
+

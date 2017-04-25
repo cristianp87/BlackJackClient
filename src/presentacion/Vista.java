@@ -10,7 +10,7 @@ package presentacion;
  * @author john
  */
 public class Vista extends javax.swing.JFrame {
-
+    private Modelo juego;
     /**
      * Creates new form Vista
      */
@@ -42,13 +42,18 @@ public class Vista extends javax.swing.JFrame {
         });
         getContentPane().add(nombreJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, 160, -1));
 
-        jugar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cliente/presentacion/botonJugar.png"))); // NOI18N
-        getContentPane().add(jugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 260, -1, -1));
+        jugar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/fondos/botonJugar.png"))); // NOI18N
+        jugar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jugarMouseClicked(evt);
+            }
+        });
+        getContentPane().add(jugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 240, -1, -1));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cliente/presentacion/imagenJugador.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/fondos/imagenJugador.png"))); // NOI18N
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cliente/presentacion/descarga.jpg"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/fondos/descarga.jpg"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 570, 340));
 
         pack();
@@ -57,6 +62,11 @@ public class Vista extends javax.swing.JFrame {
     private void nombreJugadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreJugadorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nombreJugadorActionPerformed
+
+    private void jugarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jugarMouseClicked
+        juego = new Modelo();
+        juego.iniciar();
+    }//GEN-LAST:event_jugarMouseClicked
 
     /**
      * @param args the command line arguments

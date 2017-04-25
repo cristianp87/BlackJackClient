@@ -18,12 +18,12 @@ public class Launcher {
 
     private Modelo visorCliente;
     
-    public Launcher() throws BadLocationException, IOException{
+    public Launcher(){
         Vista v = new  Vista();
         v.setVisible(true);
     }
     
-    public static void main(String[] args) throws BadLocationException, IOException {
+    public static void main(String[] args) {
         new Launcher();
     } 
     
