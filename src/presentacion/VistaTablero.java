@@ -5,6 +5,7 @@
  */
 package presentacion;
 
+import java.awt.Canvas;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -14,14 +15,20 @@ import javax.swing.JLabel;
  */
 public class VistaTablero extends javax.swing.JFrame {
 
+    private  Modelo modelo;
+    private Controlador controlador;
+
+    public VistaTablero(Modelo modelo) {
+        this.modelo = modelo;
+    }
+
+    
     /**
      * Creates new form VistaTablero
      */
     public VistaTablero() {
         initComponents();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,26 +39,26 @@ public class VistaTablero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mensaje = new javax.swing.JLabel();
         botonPlantar = new javax.swing.JButton();
         botonPedir = new javax.swing.JButton();
         lienzo = new java.awt.Canvas();
-        mensaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        botonPlantar.setText("PLANTARSE");
-        getContentPane().add(botonPlantar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, -1, -1));
-
-        botonPedir.setText("PEDIR");
-        getContentPane().add(botonPedir, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 60, -1, -1));
-
-        lienzo.setBackground(new java.awt.Color(23, 133, 1));
-        getContentPane().add(lienzo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 0, 590, 330));
-
         mensaje.setFont(new java.awt.Font("Berlin Sans FB", 0, 12)); // NOI18N
         mensaje.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 560, 90));
+        getContentPane().add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 490, 710, 40));
+
+        botonPlantar.setText("PLANTARSE");
+        getContentPane().add(botonPlantar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 500, -1, -1));
+
+        botonPedir.setText("PEDIR");
+        getContentPane().add(botonPedir, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 500, -1, -1));
+
+        lienzo.setBackground(new java.awt.Color(23, 133, 1));
+        getContentPane().add(lienzo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 0, 900, 490));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -114,11 +121,24 @@ public class VistaTablero extends javax.swing.JFrame {
     public void setMensaje(JLabel mensaje) {
         this.mensaje = mensaje;
     }
-    
+
+    public Canvas getLienzo() {
+        return lienzo;
+    }
+
+    public Modelo getModelo() {
+        return modelo;
+    }
+
+    public Controlador getControlador() {
+        if(controlador==null){
+            controlador= new Controlador();
+        }
+        return controlador;
+    }
+
     
 
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonPedir;
     private javax.swing.JButton botonPlantar;
@@ -126,5 +146,3 @@ public class VistaTablero extends javax.swing.JFrame {
     private javax.swing.JLabel mensaje;
     // End of variables declaration//GEN-END:variables
 }
-
-

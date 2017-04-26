@@ -11,4 +11,5 @@ package logica;
  */
 public class Protocolo {
     
+    
 }

@@ -16,10 +16,22 @@ public class Logica {
     private ConexionSocket conexion;
     private Socket host;
 
+
     public void conectarSocket() {
         getConexion().iniciarConexion();
         host = getConexion().getHost();
     }
+    
+    public int generarIdUsuario(){
+        return 1000 + (int) (Math.random()*8999);
+    }
+    
+    public String armaMensajeEnvio(){
+
+        return null;
+    }
+    
+    
 
     public ConexionSocket getConexion() {
         if (conexion == null) {
