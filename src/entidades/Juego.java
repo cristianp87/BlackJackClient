@@ -22,6 +22,9 @@ public class Juego {
     private int sumaCartasEnemigo;
     private String estado;
     private String estadoJugadorEnemigo;
+    private String comando;
+    private String idUsuario;
+    private String idUsuarioEnemigo;
 
     public String getNombreJugador() {
         return nombreJugador;
@@ -106,16 +109,31 @@ public class Juego {
     public void setEstadoJugadorEnemigo(String estadoJugadorEnemigo) {
         this.estadoJugadorEnemigo = estadoJugadorEnemigo;
     }
+
+    public String getComando() {
+        return comando;
+    }
+
+    public void setComando(String comando) {
+        this.comando = comando;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getIdUsuarioEnemigo() {
+        return idUsuarioEnemigo;
+    }
+
+    public void setIdUsuarioEnemigo(String idUsuarioEnemigo) {
+        this.idUsuarioEnemigo = idUsuarioEnemigo;
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+      
 }
