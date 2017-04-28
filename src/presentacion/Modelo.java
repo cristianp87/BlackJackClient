@@ -44,7 +44,8 @@ public class Modelo implements Runnable {
 
     //inicia el tablero y se conecta al socket que esta
     //en la lógica
-    public void iniciar() {
+    public void iniciar(String nombreJugador) {
+        this.nombreJugador = nombreJugador;
         pintaLienzo = true;
         getVista().setVisible(true);
         getVista().setResizable(false);
@@ -112,23 +113,55 @@ public class Modelo implements Runnable {
     private void dibujaCartas() {
         //900 * 490
         int inicioDibujo = lienzo.getWidth() / 2;
+        int numeroCartas = juego.getJuego().size();
+        inicioDibujo = inicioDibujo + (numeroCartas * 40);
         for (Carta item : juego.getJuego()) {
             inicioDibujo += -80;
-            dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 0, null);
+            dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 350, null);
         }
+        numeroCartas = juego.getCartasEnemigo().size();
+        inicioDibujo = lienzo.getWidth() / 2;
+        inicioDibujo = inicioDibujo + (numeroCartas * 40);
+        for (Carta item : juego.getCartasEnemigo()) {
+            inicioDibujo += -80;
+            if (!item.getEstadoCarta().equalsIgnoreCase("T")) {
+                dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 0, null);
+            } else {
+                dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/fondos/dorso.png")).getImage(), inicioDibujo, 0, null);
+            }
+        }
+        
         Graphics g = lienzo.getGraphics();
         g.drawImage(dobleBuffer, 0, 0, lienzo);
     }
 
     private void prueba() {
         juego = new Juego();
+        juego.setNombreJugadorEnemigo("Cristian");
         ArrayList<Carta> prueba = new ArrayList();
-        for (int i = 2; i < 10; i++) {
+        for (int i = 2; i < 7; i++) {
             Carta c = new Carta();
             c.setNombreCarta("corazones/" + i);
+            c.setValorCarta(""+i);
             prueba.add(c);
         }
+        ArrayList<Carta> pruebaEnenmigo = new ArrayList();
+        for (int i = 2; i < 5; i++) {
+            Carta c = new Carta();
+            c.setNombreCarta("picas/" + i);
+            c.setValorCarta(""+i);
+            if (i == 2) {
+                c.setEstadoCarta("T");
+            } else {
+                c.setEstadoCarta("D");
+            }
+            pruebaEnenmigo.add(c);
+        }
+
         juego.setJuego(prueba);
+        juego.setCartasEnemigo(pruebaEnenmigo);
+        getVista().getMensajeEnemigo().setText(juego.getNombreJugadorEnemigo()+":"+"Puntuación:"+juego.getSumaCartasEnemigo());
+        getVista().getPuntuacion().setText(nombreJugador+" Puntuación:"+juego.getSumaCartas());
 
     }
 

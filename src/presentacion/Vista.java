@@ -5,12 +5,16 @@
  */
 package presentacion;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author john
  */
 public class Vista extends javax.swing.JFrame {
+
     private Modelo juego;
+
     /**
      * Creates new form Vista
      */
@@ -65,7 +69,11 @@ public class Vista extends javax.swing.JFrame {
 
     private void jugarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jugarMouseClicked
         juego = new Modelo();
-        juego.iniciar();
+        if ("".equalsIgnoreCase(this.nombreJugador.getText())) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar el nombre del jugador");
+        } else {
+            juego.iniciar(this.nombreJugador.getText());
+        }
     }//GEN-LAST:event_jugarMouseClicked
 
     /**

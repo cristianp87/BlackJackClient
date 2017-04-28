@@ -1,0 +1,4 @@
+*.class
+nbproject/private/private.xml
+build/classes/logica/ConexionSocket.class
+*.class

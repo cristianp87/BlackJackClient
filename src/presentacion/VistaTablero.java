@@ -43,22 +43,26 @@ public class VistaTablero extends javax.swing.JFrame {
         botonPlantar = new javax.swing.JButton();
         botonPedir = new javax.swing.JButton();
         lienzo = new java.awt.Canvas();
+        puntuacion = new javax.swing.JLabel();
+        mensajeEnemigo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         mensaje.setFont(new java.awt.Font("Berlin Sans FB", 0, 12)); // NOI18N
         mensaje.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 490, 710, 40));
+        getContentPane().add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 530, 500, 40));
 
         botonPlantar.setText("PLANTARSE");
-        getContentPane().add(botonPlantar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 500, -1, -1));
+        getContentPane().add(botonPlantar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 540, -1, -1));
 
         botonPedir.setText("PEDIR");
-        getContentPane().add(botonPedir, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 500, -1, -1));
+        getContentPane().add(botonPedir, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 540, -1, -1));
 
         lienzo.setBackground(new java.awt.Color(23, 133, 1));
-        getContentPane().add(lienzo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 0, 900, 490));
+        getContentPane().add(lienzo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 900, 490));
+        getContentPane().add(puntuacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 530, 190, 40));
+        getContentPane().add(mensajeEnemigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -137,6 +141,24 @@ public class VistaTablero extends javax.swing.JFrame {
         return controlador;
     }
 
+    public JLabel getMensajeEnemigo() {
+        return mensajeEnemigo;
+    }
+
+    public void setMensajeEnemigo(JLabel mensajeEnemigo) {
+        this.mensajeEnemigo = mensajeEnemigo;
+    }
+
+    public JLabel getPuntuacion() {
+        return puntuacion;
+    }
+
+    public void setPuntuacion(JLabel puntuacion) {
+        this.puntuacion = puntuacion;
+    }
+    
+    
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -144,5 +166,7 @@ public class VistaTablero extends javax.swing.JFrame {
     private javax.swing.JButton botonPlantar;
     private java.awt.Canvas lienzo;
     private javax.swing.JLabel mensaje;
+    private javax.swing.JLabel mensajeEnemigo;
+    private javax.swing.JLabel puntuacion;
     // End of variables declaration//GEN-END:variables
 }

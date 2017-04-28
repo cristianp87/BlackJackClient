@@ -14,10 +14,14 @@ import java.util.ArrayList;
 public class Juego {
     
     private String nombreJugador;
+    private String nombreJugadorEnemigo;
     private String idJugador;
     private ArrayList<Carta> juego;
     private ArrayList<Carta> cartasEnemigo;
     private int sumaCartas;
+    private int sumaCartasEnemigo;
+    private String estado;
+    private String estadoJugadorEnemigo;
 
     public String getNombreJugador() {
         return nombreJugador;
@@ -52,12 +56,63 @@ public class Juego {
     }
 
     public int getSumaCartas() {
+        if(!this.getJuego().isEmpty()){
+            this.getJuego().forEach((item) -> {
+                sumaCartas+=Integer.parseInt(item.getValorCarta());
+            });
+        }
         return sumaCartas;
     }
 
     public void setSumaCartas(int sumaCartas) {
         this.sumaCartas = sumaCartas;
     }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public int getSumaCartasEnemigo() {
+        if(!this.getCartasEnemigo().isEmpty()){
+            this.getCartasEnemigo().forEach((item)-> {
+                if("D".equalsIgnoreCase(item.getEstadoCarta())){
+                    sumaCartasEnemigo+=Integer.parseInt(item.getValorCarta());
+                }           
+        });
+        }
+        return sumaCartasEnemigo;
+    }
+
+    public void setSumaCartasEnemigo(int sumaCartasEnemigo) {
+        this.sumaCartasEnemigo = sumaCartasEnemigo;
+    }
+
+    public String getNombreJugadorEnemigo() {
+        return nombreJugadorEnemigo;
+    }
+
+    public void setNombreJugadorEnemigo(String nombreJugadorEnemigo) {
+        this.nombreJugadorEnemigo = nombreJugadorEnemigo;
+    }
+
+    public String getEstadoJugadorEnemigo() {
+        return estadoJugadorEnemigo;
+    }
+
+    public void setEstadoJugadorEnemigo(String estadoJugadorEnemigo) {
+        this.estadoJugadorEnemigo = estadoJugadorEnemigo;
+    }
+    
+    
+    
+    
+    
+    
+    
     
     
     
