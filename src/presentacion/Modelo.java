@@ -59,7 +59,7 @@ public class Modelo implements Runnable {
             idUsuario = getLogica().generarIdUsuario();
             this.logica.setIdUsuario(""+idUsuario);
             this.logica.setNombreUsuario(nombreJugador);
-            mensajeEnviado = this.logica.armaMensajeEnvio(EnumComando.REG.name());
+            mensajeEnviado = getLogica().armaMensajeEnvio(EnumComando.REG.name());
             enviarMensaje();
             iniciaMensajeria();
         }
