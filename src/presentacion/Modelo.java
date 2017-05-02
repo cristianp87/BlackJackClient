@@ -13,9 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 import logica.Logica;
+import recursos.enumeraciones.EnumComando;
 import recursos.enumeraciones.EnumMensajeErrores;
 
 /**
@@ -55,11 +54,12 @@ public class Modelo implements Runnable {
         getLogica().conectarSocket();
         if (getLogica().getHost() == null) {
             getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_CONEXION.getMensaje());
-            prueba();
             hiloDibujo.start();
         } else {
             idUsuario = getLogica().generarIdUsuario();
-            mensajeEnviado = idUsuario + "|" + "REG";
+            this.logica.setIdUsuario(""+idUsuario);
+            this.logica.setNombreUsuario(nombreJugador);
+            mensajeEnviado = this.logica.armaMensajeEnvio(EnumComando.REG.name());
             enviarMensaje();
             iniciaMensajeria();
         }
@@ -81,7 +81,7 @@ public class Modelo implements Runnable {
     public void enviarMensaje() {
         try {
             datosSalida = new DataOutputStream(getLogica().getHost().getOutputStream());
-            datosSalida.write((mensajeEnviado).getBytes());
+            datosSalida.writeUTF(mensajeEnviado);
         } catch (IOException ex) {
             getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_ENVIO.getMensaje() + "--" + ex.getMessage());
         }
@@ -136,37 +136,6 @@ public class Modelo implements Runnable {
         g.drawImage(dobleBuffer, 0, 0, lienzo);
     }
 
-    private void prueba() {
-//        juego = new Juego();
-//        juego.setNombreJugadorEnemigo("Cristian");
-//        ArrayList<Carta> prueba = new ArrayList();
-//        for (int i = 2; i < 7; i++) {
-//            Carta c = new Carta();
-//            c.setNombreCarta("corazones/" + i);
-//            c.setValorCarta("" + i);
-//            prueba.add(c);
-//        }
-//        ArrayList<Carta> pruebaEnenmigo = new ArrayList();
-//        for (int i = 2; i < 5; i++) {
-//            Carta c = new Carta();
-//            c.setNombreCarta("picas/" + i);
-//            c.setValorCarta("" + i);
-//            if (i == 2) {
-//                c.setEstadoCarta("T");
-//            } else {
-//                c.setEstadoCarta("D");
-//            }
-//            pruebaEnenmigo.add(c);
-//        }
-//
-//        juego.setJuego(prueba);
-//        juego.setCartasEnemigo(pruebaEnenmigo);
-        pruebaCadena();
-
-        getVista().getMensajeEnemigo().setText(juego.getNombreJugadorEnemigo() + ":" + "Puntuación:" + juego.getSumaCartasEnemigo());
-        getVista().getPuntuacion().setText(nombreJugador + " Puntuación:" + juego.getSumaCartas());
-
-    }
 
     public VistaTablero getVista() {
         if (vista == null) {
@@ -190,46 +159,8 @@ public class Modelo implements Runnable {
         return idUsuario;
     }
 
-    public void pruebaCadena() {
-        juego = new Juego();
-        String texto = "INJ|1234|John|corazones/A-1-T,picas/2-2-D|A|5678|Cristian|picas//3%3%T,diamantes//5%5%D";
-        StringTokenizer st = new StringTokenizer(texto, "|");
-        while (st.hasMoreElements()) {
-            juego.setComando(st.nextToken());
-            juego.setIdUsuario(st.nextToken());
-            juego.setNombreJugador(st.nextToken());
-            String listaCartas = st.nextToken();
-            StringTokenizer st2 = new StringTokenizer(listaCartas, ",");
-            while (st2.hasMoreElements()) {
-                Carta c = new Carta();
-                String carta = st2.nextToken();
-                StringTokenizer st21 = new StringTokenizer(carta, "-");
-                while (st21.hasMoreElements()) {
-                    c.setNombreCarta(st2.nextToken());
-                    c.setValorCarta(st2.nextToken());
-                    c.setEstadoCarta(st2.nextToken());
-                }
 
-                juego.getJuego().add(c);
-            }
-            juego.setEstado(st.nextToken());
-            juego.setIdUsuarioEnemigo(st.nextToken());
-            juego.setNombreJugadorEnemigo(st.nextToken());
-            String listaCartasEnemigo = st.nextToken();
-            StringTokenizer st3 = new StringTokenizer(listaCartasEnemigo, ",");
-            while (st3.hasMoreTokens()) {
 
-                String carta = st2.nextToken();
-                StringTokenizer st22 = new StringTokenizer(carta, "%");
-                Carta c = new Carta();
-                while (st22.hasMoreTokens()) {
-                    c.setNombreCarta(st3.nextToken());
-                    c.setValorCarta(st3.nextToken());
-                    c.setEstadoCarta(st3.nextToken());
-                }
-                juego.getCartasEnemigo().add(c);
-            }
-        }
-    }
+
 
 }

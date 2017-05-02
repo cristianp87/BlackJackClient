@@ -26,6 +26,17 @@ public class Juego {
     private String idUsuario;
     private String idUsuarioEnemigo;
 
+    public Juego() {
+        this.nombreJugador = "null";
+        this.nombreJugadorEnemigo = "null";
+        this.idJugador = "null";
+        this.estado = "null";
+        this.comando = "null";
+        this.idUsuario = "null";
+        this.idUsuarioEnemigo = "null";
+        
+    }
+
     public String getNombreJugador() {
         return nombreJugador;
     }
@@ -43,6 +54,9 @@ public class Juego {
     }
 
     public ArrayList<Carta> getJuego() {
+        if(juego==null){
+            juego = new ArrayList<>();
+        }
         return juego;
     }
 
@@ -51,6 +65,9 @@ public class Juego {
     }
 
     public ArrayList<Carta> getCartasEnemigo() {
+        if(cartasEnemigo == null){
+            cartasEnemigo = new ArrayList<>();
+        }
         return cartasEnemigo;
     }
 

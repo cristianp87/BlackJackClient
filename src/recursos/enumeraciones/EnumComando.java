@@ -3,19 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logica;
-
-import entidades.Carta;
-import entidades.Juego;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+package recursos.enumeraciones;
 
 /**
  *
- * @author CristianPc
+ * @author jomorenoro
  */
-public class Protocolo {
+public enum EnumComando {
+    /*
+    REG=REGISTARSE
+    INI = INICIA JUEGO
+    ERR = ERROR
+     */
+    REG,INI,ERR;
 
     
-
 }
