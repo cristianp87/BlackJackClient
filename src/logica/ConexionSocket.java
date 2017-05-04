@@ -20,9 +20,7 @@ public class ConexionSocket{
     private Socket host;
 
     public ConexionSocket() {
-        ResourceBundle rb = ResourceBundle.getBundle("recursos/archivosconfiguracion/conexionPropiedades");
-        puerto = Integer.parseInt(rb.getString("puerto"));
-        ipHost = rb.getString("ipServidor");
+        
     }
     
     public void iniciarConexion(){

@@ -5,6 +5,9 @@
  */
 package presentacion;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -72,7 +75,11 @@ public class Vista extends javax.swing.JFrame {
         if ("".equalsIgnoreCase(this.nombreJugador.getText())) {
             JOptionPane.showMessageDialog(this, "Debe ingresar el nombre del jugador");
         } else {
-            juego.iniciar(this.nombreJugador.getText());
+            try {
+                juego.iniciar(this.nombreJugador.getText());
+            } catch (IOException ex) {
+                Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_jugarMouseClicked
 

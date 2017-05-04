@@ -7,8 +7,10 @@ package logica;
 
 import entidades.Carta;
 import entidades.Juego;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import recursos.enumeraciones.EnumComando;
 import recursos.enumeraciones.EnumEstado;
@@ -19,14 +21,17 @@ import recursos.enumeraciones.EnumEstado;
  */
 public class Logica {
 
-    private ConexionSocket conexion;
     private Socket host;
     private String idUsuario;
     private String nombreUsuario;
+    private int puerto;
+    private String ipHost;
 
-    public void conectarSocket() {
-        getConexion().iniciarConexion();
-        host = getConexion().getHost();
+    public void conectarSocket() throws IOException {
+        ResourceBundle rb = ResourceBundle.getBundle("recursos/archivosconfiguracion/conexionPropiedades");
+        puerto = Integer.parseInt(rb.getString("puerto"));
+        ipHost = rb.getString("ipServidor");
+        host = new Socket(ipHost, puerto);
     }
 
     public int generarIdUsuario() {
@@ -108,8 +113,8 @@ public class Logica {
         for (Carta item : listaCartas) {
             mensaje += mensaje.concat(item.getNombreCarta().concat("%")).concat(item.getValorCarta().concat("%")).concat(item.getEstadoCarta().concat(","));
         }
-        if("".equalsIgnoreCase(mensaje)){
-            mensaje="null";
+        if ("".equalsIgnoreCase(mensaje)) {
+            mensaje = "null";
         }
         return mensaje;
     }
@@ -122,12 +127,7 @@ public class Logica {
         this.idUsuario = idUsuario;
     }
 
-    public ConexionSocket getConexion() {
-        if (conexion == null) {
-            conexion = new ConexionSocket();
-        }
-        return conexion;
-    }
+
 
     public Socket getHost() {
         return host;
@@ -140,7 +140,5 @@ public class Logica {
     public void setNombreUsuario(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
-    
-    
 
 }

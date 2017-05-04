@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import logica.Logica;
 import recursos.enumeraciones.EnumComando;
 import recursos.enumeraciones.EnumMensajeErrores;
@@ -37,6 +38,7 @@ public class Modelo implements Runnable {
     private Canvas lienzo;
     private BufferedImage dobleBuffer;
     private Juego juego;
+    private Socket socket;
 
     public Modelo() {
         hiloDibujo = new Thread(this);
@@ -44,57 +46,69 @@ public class Modelo implements Runnable {
 
     //inicia el tablero y se conecta al socket que esta
     //en la lógica
-    public void iniciar(String nombreJugador) {
+    public void iniciar(String nombreJugador) throws IOException {
         this.nombreJugador = nombreJugador;
         pintaLienzo = true;
         getVista().setVisible(true);
         getVista().setResizable(false);
         getVista().getBotonPlantar().setEnabled(false);
         getVista().getBotonPedir().setEnabled(false);
-        getLogica().conectarSocket();
-        if (getLogica().getHost() == null) {
+        setSocket(new Socket("localhost", 5010));
+        if (this.socket == null) {
             getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_CONEXION.getMensaje());
             hiloDibujo.start();
         } else {
+
             idUsuario = getLogica().generarIdUsuario();
-            this.logica.setIdUsuario(""+idUsuario);
+            this.logica.setIdUsuario("" + idUsuario);
             this.logica.setNombreUsuario(nombreJugador);
             mensajeEnviado = getLogica().armaMensajeEnvio(EnumComando.REG.name());
-            enviarMensaje();
-            iniciaMensajeria();
-        }
-
-    }
-
-    //si hay una conexion con el servidor inicia el envio y recepción de 
-    //mensajes
-    public void iniciaMensajeria() {
-        inicioJuego = true;
-        while (inicioJuego) {
-            recibirMensaje();
-            enviarMensaje();
-
-        }
-    }
-
-    //metodo que envia mensaje al servidor
-    public void enviarMensaje() {
-        try {
-            datosSalida = new DataOutputStream(getLogica().getHost().getOutputStream());
+            datosSalida = new DataOutputStream(socket.getOutputStream());
             datosSalida.writeUTF(mensajeEnviado);
-        } catch (IOException ex) {
-            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_ENVIO.getMensaje() + "--" + ex.getMessage());
+            datosEntrada = new DataInputStream(socket.getInputStream());
+            mensajeRecibido = datosEntrada.readUTF();
+            System.out.println("mensaje recibido" + mensajeRecibido);
+            this.juego = getLogica().convierteMensaje(mensajeRecibido);
+            verificaMensajeEntrante();
+            hiloDibujo.start();
+
+        }
+
+    }
+
+    public void verificaMensajeEntrante() {
+        if (juego.getComando().equalsIgnoreCase("JUG")) {
+            getVista().getBotonPedir().setEnabled(true);
+            getVista().getBotonPlantar().setEnabled(true);
+            getVista().establecerEventos();
+            recibirMensajesServidor();
         }
     }
-    //metodo que recibe mensaje del servidor
 
-    public void recibirMensaje() {
+    public void recibirMensajesServidor() {
+        DataInputStream entradaDatos = null;
+        String mensaje;
+
         try {
-            datosEntrada = new DataInputStream(getLogica().getHost().getInputStream());
-            mensajeRecibido = datosEntrada.toString();
-            getVista().getMensaje().setText(mensajeRecibido);
+            entradaDatos = new DataInputStream(socket.getInputStream());
         } catch (IOException ex) {
-            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_RECIBIDO.getMensaje() + "--" + ex.getMessage());
+            System.out.println("Error al crear el stream de entrada: " + ex.getMessage());
+        } catch (NullPointerException ex) {
+            System.out.println("El socket no se creo correctamente. ");
+        }
+        boolean conectado = true;
+        while (conectado) {
+            try {
+                mensaje = entradaDatos.readUTF();
+
+            } catch (IOException ex) {
+                System.out.println("Error al leer del stream de entrada: " + ex.getMessage());
+                conectado = false;
+            } catch (NullPointerException ex) {
+                System.out.println("El socket no se creo correctamente. ");
+                ex.printStackTrace();
+                conectado = false;
+            }
         }
     }
 
@@ -136,7 +150,6 @@ public class Modelo implements Runnable {
         g.drawImage(dobleBuffer, 0, 0, lienzo);
     }
 
-
     public VistaTablero getVista() {
         if (vista == null) {
             vista = new VistaTablero();
@@ -159,8 +172,20 @@ public class Modelo implements Runnable {
         return idUsuario;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
 
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
 
+    public Juego getJuego() {
+        return juego;
+    }
 
+    public void setJuego(Juego juego) {
+        this.juego = juego;
+    }
 
 }

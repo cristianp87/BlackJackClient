@@ -101,6 +101,10 @@ public class VistaTablero extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void establecerEventos(){
+        getBotonPedir().addActionListener(new Controlador(this));
+    }
 
     public JButton getBotonPedir() {
         return botonPedir;
@@ -135,9 +139,6 @@ public class VistaTablero extends javax.swing.JFrame {
     }
 
     public Controlador getControlador() {
-        if(controlador==null){
-            controlador= new Controlador();
-        }
         return controlador;
     }
 
