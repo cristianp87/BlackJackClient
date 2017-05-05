@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ import javax.swing.JButton;
  *
  * @author CristianPc
  */
-public class Controlador implements ActionListener {
+public class Controlador implements ActionListener, Serializable {
 
     private VistaTablero vista;
     private Socket socket;
@@ -34,12 +35,26 @@ public class Controlador implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        this.juego = vista.getModelo().getJuego();
         JButton boton = (JButton) e.getSource();
         if ("PEDIR".equalsIgnoreCase(boton.getText())) {
             juego.setComando("PED");
             try {
                 salidaDatos = new DataOutputStream(this.socket.getOutputStream());
                 salidaDatos.writeUTF(this.vista.getModelo().getLogica().convierteObjetoJuego(juego));
+                vista.getModelo().recibirMensajesServidor();
+            } catch (IOException ex) {
+                Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if ("PLANTARSE".equalsIgnoreCase(boton.getText())) {
+            juego.setComando("PLA");
+            try {
+                salidaDatos = new DataOutputStream(this.socket.getOutputStream());
+                salidaDatos.writeUTF(this.vista.getModelo().getLogica().convierteObjetoJuego(juego));
+                vista.getBotonPedir().setEnabled(false);
+                vista.getBotonPlantar().setEnabled(false);
+                vista.getModelo().recibirMensajesServidor();
             } catch (IOException ex) {
                 Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
             }

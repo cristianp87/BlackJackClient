@@ -14,6 +14,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import logica.Logica;
 import recursos.enumeraciones.EnumComando;
 import recursos.enumeraciones.EnumMensajeErrores;
@@ -56,9 +58,7 @@ public class Modelo implements Runnable {
         setSocket(new Socket("localhost", 5010));
         if (this.socket == null) {
             getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_CONEXION.getMensaje());
-            hiloDibujo.start();
         } else {
-
             idUsuario = getLogica().generarIdUsuario();
             this.logica.setIdUsuario("" + idUsuario);
             this.logica.setNombreUsuario(nombreJugador);
@@ -69,10 +69,18 @@ public class Modelo implements Runnable {
             mensajeRecibido = datosEntrada.readUTF();
             System.out.println("mensaje recibido" + mensajeRecibido);
             this.juego = getLogica().convierteMensaje(mensajeRecibido);
-            verificaMensajeEntrante();
+            muestraMensajesVista();
             hiloDibujo.start();
+            getVista().establecerEventos();
+            verificaMensajeEntrante();
 
         }
+
+    }
+
+    public void muestraMensajesVista() {
+        getVista().getPuntuacion().setText("NOMBRE: " + this.juego.getNombreJugador() + " Puntuacion:" + this.juego.getSumaCartas());
+        getVista().getMensajeEnemigo().setText("NOMBRE:" + this.juego.getNombreJugadorEnemigo() + " Puntuación:" + this.juego.getSumaCartasEnemigo());
 
     }
 
@@ -80,42 +88,71 @@ public class Modelo implements Runnable {
         if (juego.getComando().equalsIgnoreCase("JUG")) {
             getVista().getBotonPedir().setEnabled(true);
             getVista().getBotonPlantar().setEnabled(true);
-            getVista().establecerEventos();
+            getVista().getMensaje().setText("ESCOJA SU ACCION, PEDIR O PLANTAR");
+
+        }
+        if (juego.getComando().equalsIgnoreCase("REG")) {
+            getVista().getMensaje().setText("ESPERE MIENTRAS SU RIVAL JUEGA....");
             recibirMensajesServidor();
+        }
+        if (juego.getComando().equalsIgnoreCase("PER")) {
+            juego.setCartasEnemigo(getLogica().destapaCartas(juego.getCartasEnemigo()));
+            getVista().getMensaje().setText("PERDIO");
+            getVista().getBotonPedir().setEnabled(false);
+            getVista().getBotonPlantar().setEnabled(false);
+            getVista().getMensajeEnemigo().setText("GANO");
+        }
+        if (juego.getComando().equalsIgnoreCase("GAN")) {
+            juego.setCartasEnemigo(getLogica().destapaCartas(juego.getCartasEnemigo()));
+            getVista().getMensaje().setText("GANO");
+            getVista().getBotonPedir().setEnabled(false);
+            getVista().getBotonPlantar().setEnabled(false);
+            getVista().getMensajeEnemigo().setText("PERDIO");
+        }
+        if (juego.getComando().equalsIgnoreCase("EMP")) {
+            juego.setCartasEnemigo(getLogica().destapaCartas(juego.getCartasEnemigo()));
+            getVista().getMensaje().setText("EMPATE");
+            getVista().getBotonPedir().setEnabled(false);
+            getVista().getBotonPlantar().setEnabled(false);
+            getVista().getMensajeEnemigo().setText("EMPATE");
         }
     }
 
     public void recibirMensajesServidor() {
-        DataInputStream entradaDatos = null;
-        String mensaje;
-
+        DataInputStream datosE = null;
         try {
-            entradaDatos = new DataInputStream(socket.getInputStream());
+            datosE = new DataInputStream(socket.getInputStream());
         } catch (IOException ex) {
             System.out.println("Error al crear el stream de entrada: " + ex.getMessage());
         } catch (NullPointerException ex) {
             System.out.println("El socket no se creo correctamente. ");
         }
         boolean conectado = true;
-        while (conectado) {
-            try {
-                mensaje = entradaDatos.readUTF();
-
-            } catch (IOException ex) {
-                System.out.println("Error al leer del stream de entrada: " + ex.getMessage());
-                conectado = false;
-            } catch (NullPointerException ex) {
-                System.out.println("El socket no se creo correctamente. ");
-                ex.printStackTrace();
-                conectado = false;
-            }
+        try {
+            mensajeRecibido = datosE.readUTF();
+            this.juego = getLogica().convierteMensaje(mensajeRecibido);
+            muestraMensajesVista();
+            verificaMensajeEntrante();
+        } catch (IOException ex) {
+            System.out.println("Error al leer del stream de entrada: " + ex.getMessage());
+            conectado = false;
+        } catch (NullPointerException ex) {
+            System.out.println("El socket no se creo correctamente. ");
+            ex.printStackTrace();
+            conectado = false;
         }
+
     }
 
     @Override
     public void run() {
-        if (pintaLienzo) {
-            repintarLienzo();
+        while (pintaLienzo) {
+            try {
+                repintarLienzo();
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -126,33 +163,35 @@ public class Modelo implements Runnable {
     }
 
     private void dibujaCartas() {
-        //900 * 490
-        int inicioDibujo = lienzo.getWidth() / 2;
-        int numeroCartas = juego.getJuego().size();
-        inicioDibujo = inicioDibujo + (numeroCartas * 40);
-        for (Carta item : juego.getJuego()) {
-            inicioDibujo += -80;
-            dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 350, null);
-        }
-        numeroCartas = juego.getCartasEnemigo().size();
-        inicioDibujo = lienzo.getWidth() / 2;
-        inicioDibujo = inicioDibujo + (numeroCartas * 40);
-        for (Carta item : juego.getCartasEnemigo()) {
-            inicioDibujo += -80;
-            if (!item.getEstadoCarta().equalsIgnoreCase("T")) {
-                dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 0, null);
-            } else {
-                dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/fondos/dorso.png")).getImage(), inicioDibujo, 0, null);
+        if (juego != null && !juego.getJuego().isEmpty()) {
+            //900 * 490
+            int inicioDibujo = lienzo.getWidth() / 2;
+            int numeroCartas = juego.getJuego().size();
+            inicioDibujo = inicioDibujo + (numeroCartas * 40);
+            for (Carta item : juego.getJuego()) {
+                inicioDibujo += -80;
+                dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 350, null);
             }
-        }
+            numeroCartas = juego.getCartasEnemigo().size();
+            inicioDibujo = lienzo.getWidth() / 2;
+            inicioDibujo = inicioDibujo + (numeroCartas * 40);
+            for (Carta item : juego.getCartasEnemigo()) {
+                inicioDibujo += -80;
+                if (!item.getEstadoCarta().equalsIgnoreCase("T")) {
+                    dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/cartas/" + item.getNombreCarta() + ".png")).getImage(), inicioDibujo, 0, null);
+                } else {
+                    dobleBuffer.getGraphics().drawImage(new javax.swing.ImageIcon(getClass().getResource("/recursos/imagenes/fondos/dorso.png")).getImage(), inicioDibujo, 0, null);
+                }
+            }
 
-        Graphics g = lienzo.getGraphics();
-        g.drawImage(dobleBuffer, 0, 0, lienzo);
+            Graphics g = lienzo.getGraphics();
+            g.drawImage(dobleBuffer, 0, 0, lienzo);
+        }
     }
 
     public VistaTablero getVista() {
         if (vista == null) {
-            vista = new VistaTablero();
+            vista = new VistaTablero(this);
         }
         return vista;
     }

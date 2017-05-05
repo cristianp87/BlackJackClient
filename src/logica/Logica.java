@@ -111,12 +111,20 @@ public class Logica {
     public String recorreArray(ArrayList<Carta> listaCartas) {
         String mensaje = "";
         for (Carta item : listaCartas) {
-            mensaje += mensaje.concat(item.getNombreCarta().concat("%")).concat(item.getValorCarta().concat("%")).concat(item.getEstadoCarta().concat(","));
+            mensaje = mensaje.concat(item.getNombreCarta().concat("%")).concat(item.getValorCarta().concat("%")).concat(item.getEstadoCarta().concat(","));
         }
         if ("".equalsIgnoreCase(mensaje)) {
             mensaje = "null";
         }
         return mensaje;
+    }
+    
+    public ArrayList<Carta> destapaCartas(ArrayList<Carta> cartasRival){
+        for(Carta item:cartasRival){
+            item.setEstadoCarta("D");
+        }
+            
+        return cartasRival;
     }
 
     public String getIdUsuario() {
