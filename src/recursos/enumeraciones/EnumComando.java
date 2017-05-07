@@ -11,11 +11,15 @@ package recursos.enumeraciones;
  */
 public enum EnumComando {
     /*
-    REG=REGISTARSE
-    INI = INICIA JUEGO
-    ERR = ERROR
+    REG = REGISTARSE-EPERAR JUEGO
+    PED = PEDIR CARTA
+    PLA = PLANTARSE
+    JUG = INICIA A JUGAR
+    PER = PERDIO
+    GAN = GANO
+    EMP = EMPATE
+    NUE = NUVO JUEGO
      */
-    REG,INI,ERR;
+    REG, PED, PLA, JUG,PER,GAN,EMP,NUE;
 
-    
 }

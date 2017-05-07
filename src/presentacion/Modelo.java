@@ -31,7 +31,6 @@ public class Modelo implements Runnable {
     private String nombreJugador;
     private DataInputStream datosEntrada;
     private DataOutputStream datosSalida;
-    private boolean inicioJuego;
     private int idUsuario;
     private String mensajeRecibido;
     private String mensajeEnviado;
@@ -55,7 +54,8 @@ public class Modelo implements Runnable {
         getVista().setResizable(false);
         getVista().getBotonPlantar().setEnabled(false);
         getVista().getBotonPedir().setEnabled(false);
-        setSocket(new Socket("localhost", 5010));
+        getVista().getBotonNuevo().setEnabled(false);
+        setSocket(getLogica().getHost());
         if (this.socket == null) {
             getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_CONEXION.getMensaje());
         } else {
@@ -85,61 +85,56 @@ public class Modelo implements Runnable {
     }
 
     public void verificaMensajeEntrante() {
-        if (juego.getComando().equalsIgnoreCase("JUG")) {
+        getVista().getBotonNuevo().setEnabled(false);
+        if (juego.getComando().equalsIgnoreCase(EnumComando.JUG.name())) {
             getVista().getBotonPedir().setEnabled(true);
             getVista().getBotonPlantar().setEnabled(true);
-            getVista().getMensaje().setText("ESCOJA SU ACCION, PEDIR O PLANTAR");
+            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_JUG.getMensaje());
 
         }
-        if (juego.getComando().equalsIgnoreCase("REG")) {
-            getVista().getMensaje().setText("ESPERE MIENTRAS SU RIVAL JUEGA....");
+        if (juego.getComando().equalsIgnoreCase(EnumComando.REG.name())) {
+            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_REG.getMensaje());
             recibirMensajesServidor();
         }
-        if (juego.getComando().equalsIgnoreCase("PER")) {
+        if (juego.getComando().equalsIgnoreCase(EnumComando.PER.name())) {
             juego.setCartasEnemigo(getLogica().destapaCartas(juego.getCartasEnemigo()));
-            getVista().getMensaje().setText("PERDIO");
+            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_PER.getMensaje());
             getVista().getBotonPedir().setEnabled(false);
             getVista().getBotonPlantar().setEnabled(false);
-            getVista().getMensajeEnemigo().setText("GANO");
+            getVista().getBotonNuevo().setEnabled(true);
+            getVista().getMensajeEnemigo().setText(EnumMensajeErrores.MENSAJE_GAN.getMensaje());
         }
-        if (juego.getComando().equalsIgnoreCase("GAN")) {
+        if (juego.getComando().equalsIgnoreCase(EnumComando.GAN.name())) {
             juego.setCartasEnemigo(getLogica().destapaCartas(juego.getCartasEnemigo()));
-            getVista().getMensaje().setText("GANO");
+            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_GAN.getMensaje());
             getVista().getBotonPedir().setEnabled(false);
             getVista().getBotonPlantar().setEnabled(false);
-            getVista().getMensajeEnemigo().setText("PERDIO");
+            getVista().getBotonNuevo().setEnabled(true);
+            getVista().getMensajeEnemigo().setText(EnumMensajeErrores.MENSAJE_PER.getMensaje());
         }
-        if (juego.getComando().equalsIgnoreCase("EMP")) {
+        if (juego.getComando().equalsIgnoreCase(EnumComando.EMP.name())) {
             juego.setCartasEnemigo(getLogica().destapaCartas(juego.getCartasEnemigo()));
-            getVista().getMensaje().setText("EMPATE");
+            getVista().getMensaje().setText(EnumMensajeErrores.MENSAJE_EMP.getMensaje());
             getVista().getBotonPedir().setEnabled(false);
             getVista().getBotonPlantar().setEnabled(false);
-            getVista().getMensajeEnemigo().setText("EMPATE");
+            getVista().getBotonNuevo().setEnabled(true);
+            getVista().getMensajeEnemigo().setText(EnumMensajeErrores.MENSAJE_EMP.getMensaje());
         }
+
     }
 
     public void recibirMensajesServidor() {
         DataInputStream datosE = null;
         try {
             datosE = new DataInputStream(socket.getInputStream());
-        } catch (IOException ex) {
-            System.out.println("Error al crear el stream de entrada: " + ex.getMessage());
-        } catch (NullPointerException ex) {
-            System.out.println("El socket no se creo correctamente. ");
-        }
-        boolean conectado = true;
-        try {
             mensajeRecibido = datosE.readUTF();
             this.juego = getLogica().convierteMensaje(mensajeRecibido);
             muestraMensajesVista();
             verificaMensajeEntrante();
         } catch (IOException ex) {
-            System.out.println("Error al leer del stream de entrada: " + ex.getMessage());
-            conectado = false;
-        } catch (NullPointerException ex) {
-            System.out.println("El socket no se creo correctamente. ");
             ex.printStackTrace();
-            conectado = false;
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
 
     }
@@ -160,6 +155,12 @@ public class Modelo implements Runnable {
         lienzo = getVista().getLienzo();
         dobleBuffer = new BufferedImage(lienzo.getWidth(), lienzo.getHeight(), BufferedImage.TYPE_INT_ARGB);
         dibujaCartas();
+    }
+
+    public void nuevoJuego() {
+        lienzo.repaint();
+        getVista().getMensajeEnemigo().setText("");
+        getVista().getMensaje().setText("");
     }
 
     private void dibujaCartas() {

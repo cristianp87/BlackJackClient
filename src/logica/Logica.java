@@ -12,8 +12,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import recursos.enumeraciones.EnumComando;
-import recursos.enumeraciones.EnumEstado;
+
 
 /**
  *
@@ -44,7 +46,7 @@ public class Logica {
             juego.setComando(EnumComando.REG.name());
             juego.setIdUsuario(this.idUsuario);
             juego.setNombreJugador(nombreUsuario);
-            juego.setEstado(EnumEstado.A.name());
+            juego.setEstado("A");
         }
         return convierteObjetoJuego(juego);
     }
@@ -138,6 +140,13 @@ public class Logica {
 
 
     public Socket getHost() {
+        if(host ==null){
+            try {
+                conectarSocket();
+            } catch (IOException ex) {
+                Logger.getLogger(Logica.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return host;
     }
 

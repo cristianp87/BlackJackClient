@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import recursos.enumeraciones.EnumComando;
 
 /**
  *
@@ -38,7 +39,7 @@ public class Controlador implements ActionListener, Serializable {
         this.juego = vista.getModelo().getJuego();
         JButton boton = (JButton) e.getSource();
         if ("PEDIR".equalsIgnoreCase(boton.getText())) {
-            juego.setComando("PED");
+            juego.setComando(EnumComando.PED.name());
             try {
                 salidaDatos = new DataOutputStream(this.socket.getOutputStream());
                 salidaDatos.writeUTF(this.vista.getModelo().getLogica().convierteObjetoJuego(juego));
@@ -48,12 +49,24 @@ public class Controlador implements ActionListener, Serializable {
             }
         }
         if ("PLANTARSE".equalsIgnoreCase(boton.getText())) {
-            juego.setComando("PLA");
+            juego.setComando(EnumComando.PLA.name());
             try {
                 salidaDatos = new DataOutputStream(this.socket.getOutputStream());
                 salidaDatos.writeUTF(this.vista.getModelo().getLogica().convierteObjetoJuego(juego));
                 vista.getBotonPedir().setEnabled(false);
                 vista.getBotonPlantar().setEnabled(false);
+                vista.getModelo().recibirMensajesServidor();
+            } catch (IOException ex) {
+                Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ("NUEVO".equalsIgnoreCase(boton.getText())) {
+            try {
+                vista.getModelo().nuevoJuego();
+                juego.setComando(EnumComando.NUE.name());
+                salidaDatos = new DataOutputStream(this.socket.getOutputStream());
+                salidaDatos.writeUTF(this.vista.getModelo().getLogica().convierteObjetoJuego(juego));
                 vista.getModelo().recibirMensajesServidor();
             } catch (IOException ex) {
                 Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
